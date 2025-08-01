@@ -7,14 +7,17 @@ import { BottomNav } from "@/components/ui/bottom-nav";
 import { BalanceCard } from "@/components/ui/balance-card";
 import { TransactionItem } from "@/components/ui/transaction-item";
 import { TrustIndicator } from "@/components/ui/trust-indicator";
+import { SuccessAnimation } from "@/components/ui/success-animation";
 import { useLanguage } from "@/hooks/use-language";
 import { User, Balance, Transaction } from "@shared/schema";
-import { Plus, Send, RefreshCw, HelpCircle, Bell, Settings as SettingsIcon, Lightbulb } from "lucide-react";
+import { Plus, Send, RefreshCw, HelpCircle, Bell, Settings as SettingsIcon, Lightbulb, Zap, Clock } from "lucide-react";
 
 export default function Dashboard() {
   const [, navigate] = useLocation();
   const { t } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [lastTransactionTime, setLastTransactionTime] = useState<Date | null>(null);
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -155,26 +158,71 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Educational Nudge */}
-        <div className="bg-gradient-to-r from-purple-accent/10 to-primary/10 rounded-xl p-4">
-          <div className="flex items-start space-x-3">
-            <div className="w-8 h-8 bg-purple-accent/20 rounded-full flex items-center justify-center flex-shrink-0">
-              <Lightbulb className="w-4 h-4 text-purple-accent" />
+        {/* Enhanced Features Section */}
+        <div className="space-y-4">
+          {/* Market Insights */}
+          <div className="bg-gradient-to-r from-primary/5 to-success/5 border border-primary/20 rounded-xl p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                <Zap className="w-4 h-4 text-primary" />
+                <h3 className="font-semibold text-sm">Market Pulse</h3>
+              </div>
+              <span className="text-xs text-success bg-success/10 px-2 py-1 rounded-full flex items-center">
+                <div className="w-1.5 h-1.5 bg-success rounded-full mr-1 animate-pulse"></div>
+                Live
+              </span>
             </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-sm mb-1">💡 Pro Tip</h3>
-              <p className="text-sm text-text-gray mb-2">
-                Exchange during off-peak hours (2-6 AM) for better rates and lower network fees.
-              </p>
-              <button className="text-xs text-purple-accent font-medium">
-                Learn More
-              </button>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="text-center p-2 bg-white/50 rounded-lg">
+                <p className="text-text-gray text-xs">USDT Rate</p>
+                <p className="font-bold text-success">₨ 284.50 <span className="text-xs">↗ +0.5%</span></p>
+              </div>
+              <div className="text-center p-2 bg-white/50 rounded-lg">
+                <p className="text-text-gray text-xs">Network Fee</p>
+                <p className="font-bold text-warning">₨ 85 <span className="text-xs">↘ Low</span></p>
+              </div>
+            </div>
+          </div>
+
+          {/* Best Time Alert */}
+          <div className="bg-gradient-to-r from-warning/10 to-orange-500/10 border border-warning/20 rounded-xl p-4">
+            <div className="flex items-start space-x-3">
+              <div className="w-8 h-8 bg-warning/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <Clock className="w-4 h-4 text-warning" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-sm mb-1">⚡ Optimal Trading Window</h3>
+                <p className="text-sm text-text-gray mb-2">
+                  Current network fees are 25% lower than average. Great time for exchanges and transfers!
+                </p>
+                <div className="flex items-center space-x-2">
+                  <button 
+                    onClick={() => navigate("/exchange")}
+                    className="text-xs text-warning font-medium bg-warning/10 px-3 py-1 rounded-full hover:bg-warning/20 transition-colors"
+                  >
+                    Exchange Now
+                  </button>
+                  <button 
+                    onClick={() => navigate("/send")}
+                    className="text-xs text-primary font-medium bg-primary/10 px-3 py-1 rounded-full hover:bg-primary/20 transition-colors"
+                  >
+                    Send Money
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <BottomNav />
+      
+      {/* Success Animation */}
+      <SuccessAnimation 
+        trigger={showSuccess}
+        message="Transaction Complete!"
+        onComplete={() => setShowSuccess(false)}
+      />
     </div>
   );
 }

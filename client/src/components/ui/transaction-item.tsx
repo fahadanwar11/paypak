@@ -91,9 +91,9 @@ export function TransactionItem({ transaction, onClick }: TransactionItemProps) 
       </div>
       <div className="text-right">
         <p className="font-semibold text-sm">{getTransactionAmount(transaction)}</p>
-        <span className={`inline-flex items-center text-xs px-2 py-1 rounded-full ${getStatusColor(transaction.status)}`}>
+        <span className={`inline-flex items-center text-xs px-2 py-1 rounded-full ${getStatusColor(transaction.status || "unknown")}`}>
           <div className="w-1.5 h-1.5 bg-current rounded-full mr-1"></div>
-          {transaction.status?.charAt(0).toUpperCase() + transaction.status?.slice(1)}
+          {(transaction.status || "unknown").charAt(0).toUpperCase() + (transaction.status || "unknown").slice(1)}
         </span>
       </div>
     </button>

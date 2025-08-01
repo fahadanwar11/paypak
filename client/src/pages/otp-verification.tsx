@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { OTPInput } from "@/components/ui/otp-input";
 import { StatusBar } from "@/components/ui/status-bar";
+import { EnhancedProgressBar } from "@/components/ui/enhanced-progress-bar";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
 import { MessageSquare } from "lucide-react";
@@ -93,9 +94,9 @@ export default function OTPVerification() {
     <div className="mobile-container animate-fade-in">
       <StatusBar className="bg-primary text-white" />
       
-      {/* Progress Header */}
+      {/* Enhanced Progress Header */}
       <div className="bg-primary px-4 pb-6">
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex justify-between items-center mb-4">
           <button 
             onClick={() => navigate("/onboarding")}
             className="text-white min-h-touch min-w-touch flex items-center justify-center"
@@ -105,11 +106,10 @@ export default function OTPVerification() {
               <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           </button>
-          <span className="text-white text-sm">Step 2 of 4</span>
+          <div className="text-white text-sm">Verification</div>
         </div>
-        <div className="w-full bg-white/20 rounded-full h-2">
-          <div className="bg-white h-2 rounded-full transition-all duration-300" style={{ width: "50%" }}></div>
-        </div>
+        
+        <EnhancedProgressBar currentStep={2} totalSteps={4} />
       </div>
 
       {/* Content */}

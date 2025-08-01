@@ -19,7 +19,7 @@ export const balances = pgTable("balances", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").references(() => users.id).notNull(),
   currency: text("currency").notNull(),
-  amount: decimal("amount", { precision: 18, scale: 8 }).default("0"),
+  amount: decimal("amount", { precision: 18, scale: 8 }).default("0").notNull(),
   updatedAt: timestamp("updated_at").default(sql`now()`),
 });
 

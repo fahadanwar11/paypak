@@ -6,11 +6,13 @@ import { Input } from "@/components/ui/input";
 import { StatusBar } from "@/components/ui/status-bar";
 import { BottomNav } from "@/components/ui/bottom-nav";
 import { CurrencySelector } from "@/components/ui/currency-selector";
+import { LiveRateIndicator } from "@/components/ui/live-rate-indicator";
+import { ContextualHelp } from "@/components/ui/contextual-help";
 import { useLanguage } from "@/hooks/use-language";
 import { useToast } from "@/hooks/use-toast";
 import { User, ExchangeRate } from "@shared/schema";
 import { COUNTRIES, QUICK_AMOUNTS, FEES } from "@/lib/constants";
-import { ArrowLeft, Edit, RefreshCw, Clock } from "lucide-react";
+import { ArrowLeft, Edit, RefreshCw, Clock, Shield, AlertTriangle } from "lucide-react";
 
 export default function SendAmount() {
   const [, navigate] = useLocation();
@@ -139,31 +141,36 @@ export default function SendAmount() {
             </div>
           </div>
 
-          {/* Exchange Rate Card */}
-          <div className="bg-gradient-to-r from-primary/5 to-primary-light/5 border border-primary/20 rounded-xl p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center space-x-2">
-                <RefreshCw className="w-4 h-4 text-primary" />
-                <span className="font-medium text-sm">Live Exchange Rate</span>
-              </div>
-              <span className="text-xs text-success bg-success/10 px-2 py-1 rounded-full">
-                <svg className="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L10 4.414 6.707 7.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                </svg>
-                +0.5%
-              </span>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-text-gray">1 {targetCurrency} =</span>
-                <span className="font-semibold">₨ {parseFloat(exchangeRate?.rate || "284.50").toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-text-gray">Rate expires in:</span>
-                <span className="font-semibold text-warning flex items-center">
-                  <Clock className="w-3 h-3 mr-1" />
-                  {formatTime(timeLeft)}
-                </span>
+          {/* Enhanced Exchange Rate Card */}
+          <LiveRateIndicator
+            fromCurrency={currency}
+            toCurrency={targetCurrency}
+            currentRate={exchangeRate?.rate || "284.50"}
+            lastUpdate={new Date()}
+            className="bg-gradient-to-r from-primary/5 to-primary-light/5 border-primary/20"
+          />
+          
+          {/* Rate Lock Alert */}
+          <div className="bg-gradient-to-r from-warning/10 to-orange-500/10 border border-warning/20 rounded-xl p-4">
+            <div className="flex items-start space-x-3">
+              <AlertTriangle className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="font-semibold text-sm">Rate Lock Expires</h3>
+                  <span className="text-warning font-bold text-sm flex items-center">
+                    <Clock className="w-3 h-3 mr-1" />
+                    {formatTime(timeLeft)}
+                  </span>
+                </div>
+                <p className="text-sm text-text-gray mb-2">
+                  Current rate is locked for your transaction. Complete within {formatTime(timeLeft)} to avoid rate changes.
+                </p>
+                <div className="w-full bg-warning/20 rounded-full h-2">
+                  <div 
+                    className="bg-warning h-2 rounded-full transition-all duration-1000" 
+                    style={{ width: `${(timeLeft / 300) * 100}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
           </div>
@@ -173,33 +180,69 @@ export default function SendAmount() {
             <h3 className="font-semibold text-sm">Transaction Summary</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-text-gray">Amount you send</span>
+                <div className="flex items-center space-x-1">
+                  <span className="text-text-gray">Amount you send</span>
+                </div>
                 <span className="font-medium">₨ {summary.sendAmount.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-gray">Transfer fee</span>
+                <div className="flex items-center space-x-1">
+                  <span className="text-text-gray">Transfer fee</span>
+                  <ContextualHelp
+                    topic="transfer-fee"
+                    title="Transfer Fee"
+                    content="This covers the cost of processing your international transfer, including compliance checks and currency conversion."
+                    tips={[
+                      "Fee is fixed regardless of amount",
+                      "Includes compliance and security checks",
+                      "No hidden charges"
+                    ]}
+                  />
+                </div>
                 <span className="font-medium">₨ {summary.transferFee.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-gray">Exchange fee</span>
+                <div className="flex items-center space-x-1">
+                  <span className="text-text-gray">Exchange fee ({FEES.EXCHANGE_FEE_PERCENT}%)</span>
+                  <ContextualHelp
+                    topic="exchange-fee"
+                    title="Exchange Fee"
+                    content="A small percentage fee for converting PKR to foreign currency at market rates."
+                    tips={[
+                      "Competitive rate vs banks",
+                      "Real-time market pricing",
+                      "Transparent calculation"
+                    ]}
+                  />
+                </div>
                 <span className="font-medium">₨ {summary.exchangeFee.toFixed(0)}</span>
               </div>
               <hr className="my-2" />
-              <div className="flex justify-between font-semibold">
+              <div className="flex justify-between font-semibold text-lg">
                 <span>Total you pay</span>
                 <span>₨ {summary.totalPay.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-success font-semibold">
+              <div className="flex justify-between text-success font-semibold text-lg">
                 <span>Recipient receives</span>
                 <span>${summary.recipientReceives.toFixed(2)}</span>
               </div>
             </div>
             
             <div className="flex items-center space-x-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-              <Clock className="w-4 h-4 text-success" />
-              <span className="text-sm font-medium text-success">
-                Estimated delivery: {selectedCountry?.deliveryTime || "1-2 hours"}
-              </span>
+              <Shield className="w-4 h-4 text-success" />
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-success">
+                    Estimated delivery: {selectedCountry?.deliveryTime || "1-2 hours"}
+                  </span>
+                  <span className="text-xs text-success bg-success/10 px-2 py-1 rounded-full">
+                    Guaranteed
+                  </span>
+                </div>
+                <p className="text-xs text-text-gray mt-1">
+                  Money-back guarantee if not delivered on time
+                </p>
+              </div>
             </div>
           </div>
 

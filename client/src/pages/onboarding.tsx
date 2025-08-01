@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { StatusBar } from "@/components/ui/status-bar";
+import { EnhancedProgressBar } from "@/components/ui/enhanced-progress-bar";
+import { SecurityBadge } from "@/components/ui/security-badge";
+import { ContextualHelp } from "@/components/ui/contextual-help";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
 import { Smartphone, Shield } from "lucide-react";
@@ -53,9 +56,9 @@ export default function Onboarding() {
     <div className="mobile-container animate-fade-in">
       <StatusBar className="bg-primary text-white" />
       
-      {/* Progress Header */}
+      {/* Enhanced Progress Header */}
       <div className="bg-primary px-4 pb-6">
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex justify-between items-center mb-4">
           <button 
             onClick={() => window.history.back()}
             className="text-white min-h-touch min-w-touch flex items-center justify-center"
@@ -65,11 +68,10 @@ export default function Onboarding() {
               <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           </button>
-          <span className="text-white text-sm">Step 1 of 4</span>
+          <div className="text-white text-sm">CryptoFi Setup</div>
         </div>
-        <div className="w-full bg-white/20 rounded-full h-2">
-          <div className="bg-white h-2 rounded-full transition-all duration-300" style={{ width: "25%" }}></div>
-        </div>
+        
+        <EnhancedProgressBar currentStep={1} totalSteps={4} />
       </div>
 
       {/* Content */}
@@ -83,24 +85,28 @@ export default function Onboarding() {
         </div>
 
         <div className="space-y-4">
-          <PhoneInput
-            value={phoneNumber}
-            onChange={setPhoneNumber}
-            placeholder={t("phonePlaceholder")}
-            label={t("phoneLabel")}
-          />
+          <div className="relative">
+            <PhoneInput
+              value={phoneNumber}
+              onChange={setPhoneNumber}
+              placeholder={t("phonePlaceholder")}
+              label={t("phoneLabel")}
+            />
+            <div className="absolute top-0 right-0">
+              <ContextualHelp
+                topic="phone-verification"
+                title="Why Phone Verification?"
+                content="We use your phone number to verify your identity and secure your account. This is required by Pakistani financial regulations (SBP) and helps protect your funds."
+                tips={[
+                  "Your number is encrypted and never shared",
+                  "Used for transaction alerts and security",
+                  "Required for account recovery"
+                ]}
+              />
+            </div>
+          </div>
           
-          <Card className="bg-blue-50 border-blue-200">
-            <CardContent className="p-4">
-              <div className="flex items-start space-x-3">
-                <Shield className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="font-medium text-sm">{t("whyPhoneTitle")}</h3>
-                  <p className="text-sm text-text-gray mt-1">{t("whyPhoneText")}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <SecurityBadge />
         </div>
 
         <Button 

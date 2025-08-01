@@ -85,6 +85,9 @@ export class MemStorage implements IStorage {
     const user: User = { 
       ...insertUser, 
       id,
+      firstName: insertUser.firstName || null,
+      lastName: insertUser.lastName || null,
+      cnicNumber: insertUser.cnicNumber || null,
       kycLevel: 0,
       isVerified: false,
       preferredLanguage: insertUser.preferredLanguage || "en",
@@ -161,6 +164,14 @@ export class MemStorage implements IStorage {
     const transaction: Transaction = {
       ...transactionData,
       id,
+      fromCurrency: transactionData.fromCurrency || null,
+      toCurrency: transactionData.toCurrency || null,
+      fromAmount: transactionData.fromAmount || null,
+      toAmount: transactionData.toAmount || null,
+      fee: transactionData.fee || null,
+      recipientName: transactionData.recipientName || null,
+      recipientCountry: transactionData.recipientCountry || null,
+      exchangeRate: transactionData.exchangeRate || null,
       status: "pending",
       createdAt: new Date(),
     };
@@ -188,6 +199,7 @@ export class MemStorage implements IStorage {
     const recipient: Recipient = {
       ...recipientData,
       id,
+      accountDetails: recipientData.accountDetails || null,
       createdAt: new Date(),
     };
     this.recipients.set(id, recipient);

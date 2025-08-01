@@ -5,11 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StatusBar } from "@/components/ui/status-bar";
 import { BottomNav } from "@/components/ui/bottom-nav";
+import { LiveRateIndicator } from "@/components/ui/live-rate-indicator";
+import { ContextualHelp } from "@/components/ui/contextual-help";
+import { BiometricSecurity } from "@/components/ui/biometric-security";
+import { SuccessAnimation } from "@/components/ui/success-animation";
 import { useLanguage } from "@/hooks/use-language";
 import { useToast } from "@/hooks/use-toast";
 import { User, Balance, ExchangeRate } from "@shared/schema";
 import { CURRENCIES, QUICK_AMOUNTS, FEES } from "@/lib/constants";
-import { ArrowLeft, History, RefreshCw, ChevronDown, Info } from "lucide-react";
+import { ArrowLeft, History, RefreshCw, ChevronDown, Info, Shield, ArrowUpDown, Zap, Clock, AlertTriangle } from "lucide-react";
 
 export default function Exchange() {
   const [, navigate] = useLocation();
@@ -19,6 +23,9 @@ export default function Exchange() {
   const [fromCurrency, setFromCurrency] = useState("PKR");
   const [toCurrency, setToCurrency] = useState("USDT");
   const [fromAmount, setFromAmount] = useState("10000");
+  const [showBiometric, setShowBiometric] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}") as User;
 
@@ -93,11 +100,27 @@ export default function Exchange() {
       return;
     }
 
-    // In real app, would create exchange transaction
-    toast({
-      title: t("success"),
-      description: "Exchange initiated successfully",
-    });
+    // Check if biometric authentication is needed (for amounts > ₨25,000)
+    if (parseFloat(fromAmount) > 25000) {
+      setShowBiometric(true);
+    } else {
+      processExchange();
+    }
+  };
+
+  const processExchange = () => {
+    setIsProcessing(true);
+    
+    // Simulate processing
+    setTimeout(() => {
+      setIsProcessing(false);
+      setShowSuccess(true);
+      
+      toast({
+        title: "Exchange complete",
+        description: `Successfully exchanged ₨${parseFloat(fromAmount).toLocaleString()} to ${exchange.toAmount.toFixed(4)} ${toCurrency}`,
+      });
+    }, 2000);
   };
 
   const getCurrencyColor = (currency: string) => {
@@ -198,34 +221,90 @@ export default function Exchange() {
           </div>
         </div>
 
-        {/* Market Info */}
-        <div className="bg-gradient-to-r from-primary/5 to-warning/5 border border-primary/20 rounded-xl p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-sm">Market Information</h3>
-            <span className="text-xs text-success bg-success/10 px-2 py-1 rounded-full">
-              <div className="w-1.5 h-1.5 bg-success rounded-full inline-block mr-1"></div>
-              Live
-            </span>
-          </div>
+        {/* Enhanced Market Info */}
+        <LiveRateIndicator
+          fromCurrency={fromCurrency}
+          toCurrency={toCurrency}
+          currentRate={(1/exchange.rate).toFixed(2)}
+          lastUpdate={new Date()}
+          className="bg-gradient-to-r from-primary/5 to-warning/5 border-primary/20"
+        />
+
+        {/* Fee Breakdown with Help */}
+        <div className="bg-white border rounded-xl p-4 space-y-3">
+          <h3 className="font-semibold text-sm">Fee Breakdown</h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-text-gray">Exchange Rate</span>
-              <span className="font-semibold">1 {toCurrency} = ₨ {(1/exchange.rate).toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-text-gray">Network Fee</span>
-              <span className="font-semibold">₨ {exchange.networkFee}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-text-gray">Platform Fee ({FEES.EXCHANGE_FEE_PERCENT}%)</span>
+              <div className="flex items-center space-x-1">
+                <span className="text-text-gray">Platform Fee ({FEES.EXCHANGE_FEE_PERCENT}%)</span>
+                <ContextualHelp
+                  topic="platform-fee"
+                  title="Platform Fee"
+                  content="A small percentage fee that covers our exchange services, security measures, and regulatory compliance."
+                  tips={[
+                    "Much lower than traditional banks",
+                    "Transparent with no hidden costs",
+                    "Funds advanced security features"
+                  ]}
+                />
+              </div>
               <span className="font-semibold">₨ {exchange.platformFee.toFixed(0)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-text-gray">Slippage</span>
+              <div className="flex items-center space-x-1">
+                <span className="text-text-gray">Network Fee</span>
+                <ContextualHelp
+                  topic="network-fee"
+                  title="Network Fee"
+                  content="Blockchain network fee required to process the transaction. This goes directly to miners/validators."
+                  tips={[
+                    "Varies based on network congestion",
+                    "Currently at optimal levels",
+                    "Ensures fast transaction confirmation"
+                  ]}
+                />
+              </div>
+              <div className="flex items-center space-x-1">
+                <span className="font-semibold">₨ {exchange.networkFee}</span>
+                <span className="text-xs text-success bg-success/10 px-1 rounded">Low</span>
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-text-gray">Market Slippage</span>
               <span className="font-semibold text-warning">~0.1%</span>
+            </div>
+            <hr className="my-2" />
+            <div className="flex justify-between font-semibold text-lg">
+              <span>Total Cost</span>
+              <span>₨ {exchange.totalCost.toFixed(0)}</span>
             </div>
           </div>
         </div>
+
+        {/* Security Notice for Large Amounts */}
+        {parseFloat(fromAmount) > 25000 && (
+          <div className="bg-gradient-to-r from-warning/10 to-orange-500/10 border border-warning/20 rounded-xl p-4">
+            <div className="flex items-start space-x-3">
+              <Shield className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-sm mb-1">Enhanced Security Required</h3>
+                <p className="text-sm text-text-gray mb-2">
+                  Exchanges above ₨25,000 require biometric authentication for your security.
+                </p>
+                <div className="flex items-center space-x-4 text-xs">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-success rounded-full"></div>
+                    <span>SBP Compliant</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-primary rounded-full"></div>
+                    <span>Anti-Fraud Protection</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Quick Exchange Amounts */}
         <div className="space-y-3">
@@ -299,18 +378,69 @@ export default function Exchange() {
         </div>
       </div>
 
-      {/* Bottom CTA */}
+      {/* Enhanced Bottom CTA */}
       <div className="fixed bottom-16 left-0 right-0 max-w-sm mx-auto p-4 bg-white border-t">
         <Button 
           onClick={handleExchange}
-          className="w-full py-4 min-h-touch"
+          disabled={isProcessing || !fromAmount || parseFloat(fromAmount) <= 0}
+          className="w-full py-4 text-lg font-semibold min-h-touch relative overflow-hidden"
           size="lg"
         >
-          Exchange ₨ {exchange.amount.toLocaleString()} → {getCurrencyIcon(toCurrency)} {exchange.toAmount.toFixed(2)}
+          {isProcessing ? (
+            <div className="flex items-center space-x-2">
+              <RefreshCw className="w-5 h-5 animate-spin" />
+              <span>Processing...</span>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center space-x-2">
+              <ArrowUpDown className="w-5 h-5" />
+              <span>Exchange ₨ {exchange.amount.toLocaleString()} → {getCurrencyIcon(toCurrency)} {exchange.toAmount.toFixed(2)}</span>
+            </div>
+          )}
+          
+          {/* Shimmer effect for high-value transactions */}
+          {parseFloat(fromAmount) > 25000 && !isProcessing && (
+            <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+          )}
         </Button>
+
+        {/* Processing Status */}
+        {isProcessing && (
+          <div className="mt-3 bg-blue-50 border border-blue-200 rounded-xl p-3">
+            <div className="flex items-center space-x-3">
+              <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+              <div>
+                <p className="font-medium text-sm">Processing Exchange</p>
+                <p className="text-xs text-text-gray">Securing best rates...</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <BottomNav />
+      
+      {/* Biometric Authentication */}
+      <BiometricSecurity
+        isOpen={showBiometric}
+        amount={`₨ ${parseFloat(fromAmount).toLocaleString()}`}
+        action="Exchange"
+        onSuccess={() => {
+          setShowBiometric(false);
+          processExchange();
+        }}
+        onCancel={() => setShowBiometric(false)}
+      />
+      
+      {/* Success Animation */}
+      <SuccessAnimation 
+        trigger={showSuccess}
+        message="Exchange Complete!"
+        onComplete={() => {
+          setShowSuccess(false);
+          navigate("/dashboard");
+        }}
+      />
     </div>
   );
 }
