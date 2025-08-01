@@ -1,0 +1,218 @@
+1. Purpose & Goals (What the UI must solve)
+CryptoFi is a regulated PKR-to-crypto wallet and instant cross-border remittance app. The UI must:
+
+Make complex financial flows (onboarding, fiat ↔ crypto conversion, international send) feel simple, fast, and trustworthy.
+
+Work for both smartphone users and lower-tech/feature-phone users (with fallback via USSD/SMS).
+
+Bridge trust deficits in crypto through transparency and clear feedback.
+
+Support bilingual (English/Urdu) and RTL needs seamlessly. 
+Netguru
+ProCreator
+Medium
+
+2. Core Design Principles (to guide every decision)
+Zero-friction onboarding: Minimize typing, use phone+OTP, OCR for CNIC, and biometric login options early. Show progress so users know where they are. 
+ProCreator
+G & Co.
+
+Trust through transparency: Surface fees upfront, show real-time status of transfers, proof-of-reserves cues, and clear compliance badges. 
+Netguru
+Medium
+
+Simplicity over noise: Prioritize key actions, avoid clutter, use progressive disclosure for advanced features. 
+UXDA
+Medium
+
+Accessibility & performance: WCAG-compliant contrast, large touch targets, keyboard/screen-reader support, low-bandwidth optimizations for slow networks. 
+MeitY
+
+Localization & RTL correctness: Full layout mirroring for Urdu, appropriate typography pairing, and testing for right-to-left flows. 
+UX Collective
+MasterStudy
+Medium
+
+Mobile-first and responsive: Prioritize mobile UX but ensure scalable components for web; optimize for perceived speed. 
+Netguru
+Itexus
+
+3. Key User Flows & Screens to Design First
+(These are the MVP/core flows; each should have hi-fi mockups + interactive prototype)
+
+A. Onboarding & KYC
+Phone number + OTP entry
+
+CNIC capture with live OCR and quality feedback
+
+Selfie/live detection with anti-spoofing hints
+
+Tiered KYC progress indicator (basic → enhanced → premium)
+
+Trust explanations (“Why we need this”) and data usage transparency. 
+ProCreator
+UXDA
+
+B. Dashboard / Home
+Combined PKR + crypto balances
+
+Quick actions (Add Money, Send Money, Exchange, Help)
+
+Recent activity with status labels and ability to act (retry, share receipt)
+
+Educational nudges for first-time users. 
+Netguru
+Webstacks
+
+C. Send Money (International & Domestic)
+Country selection with flags & recent recipients
+
+Recipient management (saved, new)
+
+Live quote with break-down of fees, conversion, ETA
+
+Review/confirm with security step (PIN/biometric)
+
+Real-time status tracker and shareable receipt. 
+Netguru
+UXDA
+
+D. Exchange (PKR ↔ USDT/BTC/ETH)
+Select asset, live rate preview, slippage warning
+
+Terms & small tooltips explaining what the user is doing
+
+Confirmation with transparent spread/fee display
+
+Portfolio snapshot after trade. 
+Medium
+Webstacks
+
+E. Help & Support
+Contextual help (inline “why did this fail?”)
+
+Live chat / WhatsApp quick access
+
+Self-serve FAQs adapted to persona language (Urdu/English)
+
+Issue reporting with easy repro steps. 
+Netguru
+UX4Sight
+
+F. Settings & Profile
+Language toggle (EN/UR) with immediate layout adaptation
+
+Security (2FA, device management)
+
+KYC status and upgrade path
+
+Privacy controls and data deletion request. 
+DashDevs: Fintech Software Solutions
+
+G. Feature-Phone Fallback (USSD/SMS)
+Simplified menu-style flows (send, check balance, request help)
+
+Explicit mapping of core actions to short codes
+
+Lightweight confirmations and error handling. 
+Itexus
+
+4. Component Requirements (to include in the Figma library)
+Buttons: Primary/secondary/tertiary, disabled, loading
+
+Form fields: OTP inputs, masked inputs (CNIC), validation states, inline errors
+
+Cards: Balance, transaction, recipient, quote breakdown
+
+Progress indicators: Onboarding steps, transfer status
+
+Microcopy: Explanatory captions, tooltips, trust blurbs (“Regulated by PVARA”, “Proof of reserves”)
+
+Modal patterns: Confirm, error recovery, educational tips
+
+Responsive navigation (bottom tab for mobile, sidebar for web)
+
+RTL-aware versions of every component (mirrored icons, reversed pagination/back behavior). 
+UX Collective
+YoungInnovations' Blog
+
+5. Trust & Security UI Patterns
+Upfront fee breakdown with “you pay / they receive” comparison
+
+Visual proof-of-reserves indicator (e.g., small badge with “Updated X minutes ago”)
+
+Transaction status with step-by-step ticks and estimated times
+
+Clear error messages with actionable recovery (don’t just say “failed”). 
+Medium
+Netguru
+
+6. Localization & RTL Details
+Mirror entire layout for Urdu, including navigation, back-arrow logic, swipe directions.
+
+Choose appropriate Urdu typography (e.g., Noto Nastaliq) with line-height/ligature handling.
+
+Label hierarchy that works in both languages without truncation.
+
+Fallback font stack that gracefully degrades.
+
+Testing harness for RTL vs LTR toggling in the prototype. 
+MasterStudy
+Medium
+YoungInnovations' Blog
+
+7. Accessibility & Low-Bandwidth Considerations
+Contrast ratios ≥4.5:1; large touch targets (44x44px)
+
+Keyboard navigability and screen-reader labels (semantic markup equivalents in app)
+
+Skeleton loaders to reduce perceived wait, avoid content shift
+
+Optional “lite” mode: reduce imagery, textual summaries, deferred sync for spotty networks. 
+MeitY
+
+8. Interaction & Micro-Feedback
+Success feedback (confetti / subtle celebration) for first transfer
+
+Shake on incorrect PIN, inline validation before submission
+
+Pull-to-refresh for balances, swipe actions on transaction list (e.g., “repeat”, “share”)
+
+Timers for quotes with visual urgency (countdowns). 
+UX4Sight
+
+9. Initial Deliverables for Designer
+Component Library: Tokens (color, typography, spacing), button styles, form controls, cards, modals with RTL variants.
+
+High-Fidelity Flows: Onboarding, send money, exchange, dashboard, support.
+
+RTL / Bilingual Prototype: Toggleable language with mirrored UI.
+
+Accessibility Checklist: Annotated screens showing compliance.
+
+Design Token Export: For engineers (CSS variables / Tailwind mapping).
+
+Interactive Prototype: Clickable demo for user testing on mobile.
+
+Usability Test Plan: Script for 5–8 users per persona to validate clarity of onboarding and remittance flow. 
+G & Co.
+Netguru
+Medium
+
+10. Success Metrics to Drive Iteration (for design handoff context)
+Onboarding completion rate
+
+Time-to-first-transaction
+
+Drop-off points in send/exchange flows
+
+User-reported trust (post-transaction survey)
+
+Localization error rate (language toggle usage without confusion)
+
+Accessibility issue count from audits. 
+Webstacks
+DashDevs: Fintech Software Solutions
+
+Summary for the Designer to Start With
+“Build a mobile-first, bilingual (EN/UR) remittance+crypto wallet that feels as easy as texting, and as trustworthy as a regulated bank. Start with a shared Figma component system (with mirrored RTL variants), zero-friction onboarding (phone+OCR+biometrics), clear send/exchange flows with transparent pricing, and layered support. Design for both full-smartphone users and low-bandwidth/feature-phone fallback. Embed trust visually, make recovery easy, and ensure accessibility from the first screen.”
