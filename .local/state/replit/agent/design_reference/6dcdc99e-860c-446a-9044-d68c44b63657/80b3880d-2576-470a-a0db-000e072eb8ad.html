@@ -1,0 +1,1339 @@
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoFi - PKR to Crypto Wallet & Remittance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'primary': '#1B4B8C',
+                    'primary-light': '#2563EB',
+                    'success': '#10B981',
+                    'warning': '#F59E0B',
+                    'error': '#EF4444',
+                    'purple-accent': '#8B5CF6',
+                    'text-gray': '#64748B',
+                    'dark-text': '#1E293B'
+                },
+                fontFamily: {
+                    'inter': ['Inter', 'sans-serif']
+                },
+                minHeight: {
+                    'touch': '44px'
+                },
+                minWidth: {
+                    'touch': '44px'
+                }
+            }
+        }
+    };
+    </script>
+</head>
+<body class="font-inter bg-slate-50 text-dark-text">
+    <!-- Mobile App Container -->
+    <div class="max-w-sm mx-auto bg-white min-h-screen shadow-2xl relative">
+        
+        <!-- @COMPONENT: OnboardingFlow -->
+        <div id="onboarding-screen" class="onboarding-step active">
+            <!-- Status Bar -->
+            <div class="flex justify-between items-center p-4 pt-12 bg-primary text-white">
+                <div class="flex items-center space-x-1">
+                    <div class="w-1 h-1 bg-white rounded-full"></div>
+                    <div class="w-1 h-1 bg-white rounded-full"></div>
+                    <div class="w-1 h-1 bg-white rounded-full"></div>
+                </div>
+                <span class="text-sm font-medium">9:41 AM</span>
+                <div class="flex items-center space-x-1">
+                    <i class="fas fa-signal text-xs"></i>
+                    <i class="fas fa-wifi text-xs"></i>
+                    <i class="fas fa-battery-three-quarters text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Onboarding Progress -->
+            <div class="bg-primary px-4 pb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <button class="text-white" data-event="click:goBack">
+                        <i class="fas fa-arrow-left text-lg"></i>
+                    </button>
+                    <span class="text-white text-sm">Step 1 of 4</span>
+                </div>
+                <div class="w-full bg-white/20 rounded-full h-2">
+                    <div class="bg-white h-2 rounded-full transition-all duration-300" style="width: 25%"></div>
+                </div>
+            </div>
+
+            <!-- Phone Number Entry -->
+            <div class="p-6 space-y-6">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-mobile-alt text-2xl text-primary"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold mb-2">Enter your phone number</h1>
+                    <p class="text-text-gray">We'll send you a verification code to get started securely</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="relative">
+                        <label class="block text-sm font-medium mb-2">Phone Number</label>
+                        <div class="flex">
+                            <div class="flex items-center px-3 py-3 border border-gray-300 rounded-l-lg bg-gray-50">
+                                <!-- Pakistan flag representation -->
+                                <span class="text-lg mr-2">🇵🇰</span>
+                                <span class="text-sm font-medium">+92</span>
+                            </div>
+                            <input type="tel" placeholder="301 2345678" 
+                                   class="flex-1 px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg focus:ring-2 focus:ring-primary focus:border-transparent min-h-touch"
+                                   data-bind="phoneNumber" data-mock="true">
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-shield-alt text-primary text-lg mt-0.5"></i>
+                            <div>
+                                <h3 class="font-medium text-sm">Why we need this</h3>
+                                <p class="text-sm text-text-gray mt-1">Your phone number helps us verify your identity and secure your account. We're regulated by SBP and follow strict data protection standards.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="w-full bg-primary text-white py-4 rounded-lg font-semibold min-h-touch transition-colors hover:bg-primary/90 disabled:opacity-50"
+                        data-event="click:sendOTP" data-implementation="Should validate phone number format">
+                    Send Verification Code
+                </button>
+
+                <div class="text-center">
+                    <p class="text-xs text-text-gray">
+                        By continuing, you agree to our 
+                        <a href="#" class="text-primary underline">Terms of Service</a> and 
+                        <a href="#" class="text-primary underline">Privacy Policy</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: OnboardingFlow -->
+
+        <!-- @COMPONENT: OTPVerification -->
+        <div id="otp-screen" class="onboarding-step">
+            <!-- Status Bar -->
+            <div class="flex justify-between items-center p-4 pt-12 bg-primary text-white">
+                <div class="flex items-center space-x-1">
+                    <div class="w-1 h-1 bg-white rounded-full"></div>
+                    <div class="w-1 h-1 bg-white rounded-full"></div>
+                    <div class="w-1 h-1 bg-white rounded-full"></div>
+                </div>
+                <span class="text-sm font-medium">9:41 AM</span>
+                <div class="flex items-center space-x-1">
+                    <i class="fas fa-signal text-xs"></i>
+                    <i class="fas fa-wifi text-xs"></i>
+                    <i class="fas fa-battery-three-quarters text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Progress -->
+            <div class="bg-primary px-4 pb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <button class="text-white" data-event="click:goBack">
+                        <i class="fas fa-arrow-left text-lg"></i>
+                    </button>
+                    <span class="text-white text-sm">Step 2 of 4</span>
+                </div>
+                <div class="w-full bg-white/20 rounded-full h-2">
+                    <div class="bg-white h-2 rounded-full transition-all duration-300" style="width: 50%"></div>
+                </div>
+            </div>
+
+            <!-- OTP Entry -->
+            <div class="p-6 space-y-6">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-sms text-2xl text-success"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold mb-2">Enter verification code</h1>
+                    <p class="text-text-gray">We sent a code to <span class="font-semibold" data-bind="formattedPhone">+92 301 2345678</span></p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- OTP Input -->
+                    <div class="flex justify-center space-x-3">
+                        <input type="tel" maxlength="1" class="w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-touch min-w-touch" data-mock="true">
+                        <input type="tel" maxlength="1" class="w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-touch min-w-touch" data-mock="true">
+                        <input type="tel" maxlength="1" class="w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-touch min-w-touch" data-mock="true">
+                        <input type="tel" maxlength="1" class="w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-touch min-w-touch" data-mock="true">
+                        <input type="tel" maxlength="1" class="w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-touch min-w-touch" data-mock="true">
+                        <input type="tel" maxlength="1" class="w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-touch min-w-touch" data-mock="true">
+                    </div>
+
+                    <div class="text-center">
+                        <p class="text-sm text-text-gray mb-2">Didn't receive the code?</p>
+                        <button class="text-primary font-medium underline" data-event="click:resendOTP">
+                            Resend code (30s)
+                        </button>
+                    </div>
+                </div>
+
+                <button class="w-full bg-primary text-white py-4 rounded-lg font-semibold min-h-touch transition-colors hover:bg-primary/90 disabled:opacity-50"
+                        data-event="click:verifyOTP">
+                    Verify & Continue
+                </button>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: OTPVerification -->
+
+        <!-- @COMPONENT: Dashboard -->
+        <div id="dashboard-screen" class="onboarding-step">
+            <!-- Status Bar -->
+            <div class="flex justify-between items-center p-4 pt-12 bg-primary text-white">
+                <div class="flex items-center space-x-1">
+                    <div class="w-1 h-1 bg-white rounded-full"></div>
+                    <div class="w-1 h-1 bg-white rounded-full"></div>
+                    <div class="w-1 h-1 bg-white rounded-full"></div>
+                </div>
+                <span class="text-sm font-medium">9:41 AM</span>
+                <div class="flex items-center space-x-1">
+                    <i class="fas fa-signal text-xs"></i>
+                    <i class="fas fa-wifi text-xs"></i>
+                    <i class="fas fa-battery-three-quarters text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="bg-primary text-white p-4">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                            <span class="text-sm font-bold" data-bind="userInitials" data-mock="true">AH</span>
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-90">Welcome back</p>
+                            <p class="font-semibold" data-bind="userName" data-mock="true">Ahmed Hassan</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center min-h-touch min-w-touch" data-event="click:openNotifications">
+                            <i class="fas fa-bell text-lg"></i>
+                            <span class="absolute -top-1 -right-1 w-3 h-3 bg-error rounded-full text-xs"></span>
+                        </button>
+                        <button class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center min-h-touch min-w-touch" data-event="click:openSettings">
+                            <i class="fas fa-cog text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Balance Card -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 mb-4">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-sm opacity-90 mb-1">Total Balance</p>
+                            <div class="flex items-center">
+                                <h2 class="text-3xl font-bold" data-bind="totalBalance" data-mock="true">₨ 45,250</h2>
+                                <span class="ml-2 text-xs bg-success/20 text-success px-2 py-1 rounded-full">+2.5%</span>
+                            </div>
+                        </div>
+                        <button class="p-2 bg-white/20 rounded-lg min-h-touch min-w-touch" data-event="click:toggleBalanceVisibility">
+                            <i class="fas fa-eye text-sm"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Currency Breakdown -->
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="bg-white/10 rounded-lg p-3">
+                            <p class="text-xs opacity-75">PKR</p>
+                            <p class="font-semibold" data-bind="pkrBalance" data-mock="true">₨ 25,000</p>
+                        </div>
+                        <div class="bg-white/10 rounded-lg p-3">
+                            <p class="text-xs opacity-75">USDT</p>
+                            <p class="font-semibold" data-bind="usdtBalance" data-mock="true">$150.50</p>
+                        </div>
+                        <div class="bg-white/10 rounded-lg p-3">
+                            <p class="text-xs opacity-75">BTC</p>
+                            <p class="font-semibold" data-bind="btcBalance" data-mock="true">0.00045</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trust Indicator -->
+                <div class="flex items-center justify-center space-x-2 text-xs opacity-90">
+                    <i class="fas fa-shield-alt text-success"></i>
+                    <span>Regulated by SBP</span>
+                    <span class="w-1 h-1 bg-white/40 rounded-full"></span>
+                    <span>Proof of Reserves ✓</span>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="p-4">
+                <div class="grid grid-cols-4 gap-3 mb-6">
+                    <button class="flex flex-col items-center p-4 bg-white rounded-xl shadow-sm border min-h-touch" data-event="click:addMoney">
+                        <div class="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center mb-2">
+                            <i class="fas fa-plus text-success text-lg"></i>
+                        </div>
+                        <span class="text-xs font-medium text-center">Add Money</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 bg-white rounded-xl shadow-sm border min-h-touch" data-event="click:sendMoney">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-2">
+                            <i class="fas fa-paper-plane text-primary text-lg"></i>
+                        </div>
+                        <span class="text-xs font-medium text-center">Send</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 bg-white rounded-xl shadow-sm border min-h-touch" data-event="click:exchange">
+                        <div class="w-12 h-12 bg-warning/10 rounded-full flex items-center justify-center mb-2">
+                            <i class="fas fa-exchange-alt text-warning text-lg"></i>
+                        </div>
+                        <span class="text-xs font-medium text-center">Exchange</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 bg-white rounded-xl shadow-sm border min-h-touch" data-event="click:help">
+                        <div class="w-12 h-12 bg-purple-accent/10 rounded-full flex items-center justify-center mb-2">
+                            <i class="fas fa-question-circle text-purple-accent text-lg"></i>
+                        </div>
+                        <span class="text-xs font-medium text-center">Help</span>
+                    </button>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Recent Activity</h3>
+                        <button class="text-primary text-sm font-medium" data-event="click:viewAllTransactions">View All</button>
+                    </div>
+
+                    <!-- @MAP: recentTransactions.map(transaction => ( -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-success/10 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-arrow-down text-success"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-sm" data-mock="true">Money Added</p>
+                                    <p class="text-xs text-text-gray" data-mock="true">Today, 2:30 PM</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold text-success" data-mock="true">+₨ 5,000</p>
+                                <span class="inline-flex items-center text-xs text-success bg-success/10 px-2 py-1 rounded-full">
+                                    <div class="w-1.5 h-1.5 bg-success rounded-full mr-1"></div>
+                                    Completed
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-paper-plane text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-sm" data-mock="true">Sent to Sarah Khan</p>
+                                    <p class="text-xs text-text-gray" data-mock="true">Yesterday, 4:15 PM</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold" data-mock="true">-₨ 2,500</p>
+                                <span class="inline-flex items-center text-xs text-success bg-success/10 px-2 py-1 rounded-full">
+                                    <div class="w-1.5 h-1.5 bg-success rounded-full mr-1"></div>
+                                    Delivered
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-warning/10 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-exchange-alt text-warning"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-sm" data-mock="true">PKR → USDT</p>
+                                    <p class="text-xs text-text-gray" data-mock="true">2 days ago, 1:20 PM</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold" data-mock="true">₨ 10,000 → $35.2</p>
+                                <span class="inline-flex items-center text-xs text-success bg-success/10 px-2 py-1 rounded-full">
+                                    <div class="w-1.5 h-1.5 bg-success rounded-full mr-1"></div>
+                                    Completed
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- @END_MAP )) -->
+                </div>
+
+                <!-- Educational Nudge -->
+                <div class="bg-gradient-to-r from-purple-accent/10 to-primary/10 rounded-xl p-4 mb-20">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-purple-accent/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-lightbulb text-purple-accent text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-sm mb-1">💡 Pro Tip</h3>
+                            <p class="text-sm text-text-gray mb-2">Exchange during off-peak hours (2-6 AM) for better rates and lower network fees.</p>
+                            <button class="text-xs text-purple-accent font-medium" data-event="click:learnMore">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: Dashboard -->
+
+        <!-- @COMPONENT: SendMoney -->
+        <div id="send-money-screen" class="onboarding-step">
+            <!-- Status Bar -->
+            <div class="flex justify-between items-center p-4 pt-12 bg-white border-b">
+                <div class="flex items-center space-x-1">
+                    <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                </div>
+                <span class="text-sm font-medium text-gray-900">9:41 AM</span>
+                <div class="flex items-center space-x-1">
+                    <i class="fas fa-signal text-xs text-gray-400"></i>
+                    <i class="fas fa-wifi text-xs text-gray-400"></i>
+                    <i class="fas fa-battery-three-quarters text-xs text-gray-400"></i>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 bg-white border-b">
+                <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 min-h-touch min-w-touch" data-event="click:goBack">
+                    <i class="fas fa-arrow-left text-gray-600"></i>
+                </button>
+                <h1 class="text-lg font-semibold">Send Money</h1>
+                <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 min-h-touch min-w-touch" data-event="click:viewHistory">
+                    <i class="fas fa-history text-gray-600"></i>
+                </button>
+            </div>
+
+            <div class="p-4 space-y-6">
+                <!-- Send Type Selection -->
+                <div class="space-y-3">
+                    <h2 class="text-base font-semibold">Where are you sending?</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="p-4 border-2 border-primary bg-primary/5 rounded-xl text-left transition-all min-h-touch" data-event="click:selectInternational">
+                            <div class="flex items-center justify-between mb-2">
+                                <i class="fas fa-globe text-primary text-xl"></i>
+                                <i class="fas fa-check-circle text-primary"></i>
+                            </div>
+                            <p class="font-semibold text-sm">International</p>
+                            <p class="text-xs text-text-gray">Send worldwide</p>
+                        </button>
+                        <button class="p-4 border-2 border-gray-200 rounded-xl text-left hover:border-gray-300 transition-all min-h-touch" data-event="click:selectDomestic">
+                            <div class="flex items-center justify-between mb-2">
+                                <i class="fas fa-map-marker-alt text-gray-400 text-xl"></i>
+                            </div>
+                            <p class="font-semibold text-sm">Domestic</p>
+                            <p class="text-xs text-text-gray">Within Pakistan</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Country Selection -->
+                <div class="space-y-3">
+                    <h3 class="text-base font-semibold">Select country</h3>
+                    <div class="space-y-2">
+                        <!-- @MAP: popularCountries.map(country => ( -->
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:selectCountry">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl" data-mock="true">🇺🇸</span>
+                                <div class="text-left">
+                                    <p class="font-medium text-sm" data-mock="true">United States</p>
+                                    <p class="text-xs text-text-gray">USD • 1-2 hours</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-text-gray">Rate</p>
+                                <p class="font-semibold text-sm" data-mock="true">1 USD = ₨ 284.50</p>
+                            </div>
+                        </button>
+
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:selectCountry">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl" data-mock="true">🇬🇧</span>
+                                <div class="text-left">
+                                    <p class="font-medium text-sm" data-mock="true">United Kingdom</p>
+                                    <p class="text-xs text-text-gray">GBP • 2-4 hours</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-text-gray">Rate</p>
+                                <p class="font-semibold text-sm" data-mock="true">1 GBP = ₨ 356.20</p>
+                            </div>
+                        </button>
+
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:selectCountry">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl" data-mock="true">🇦🇪</span>
+                                <div class="text-left">
+                                    <p class="font-medium text-sm" data-mock="true">United Arab Emirates</p>
+                                    <p class="text-xs text-text-gray">AED • 30 mins</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-text-gray">Rate</p>
+                                <p class="font-semibold text-sm" data-mock="true">1 AED = ₨ 77.45</p>
+                            </div>
+                        </button>
+                        <!-- @END_MAP )) -->
+
+                        <button class="w-full flex items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-xl text-text-gray hover:border-gray-400 transition-colors min-h-touch" data-event="click:searchCountries">
+                            <i class="fas fa-search mr-2"></i>
+                            <span class="font-medium">Search more countries</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Recipients -->
+                <div class="space-y-3">
+                    <h3 class="text-base font-semibold">Recent recipients</h3>
+                    <div class="flex space-x-3 overflow-x-auto pb-2">
+                        <!-- @MAP: recentRecipients.map(recipient => ( -->
+                        <button class="flex-shrink-0 flex flex-col items-center p-3 bg-white border rounded-xl min-w-touch min-h-touch" data-event="click:selectRecipient">
+                            <div class="w-12 h-12 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center mb-2">
+                                <span class="text-white font-semibold text-sm" data-mock="true">SK</span>
+                            </div>
+                            <p class="text-xs font-medium truncate w-16 text-center" data-mock="true">Sarah K.</p>
+                        </button>
+
+                        <button class="flex-shrink-0 flex flex-col items-center p-3 bg-white border rounded-xl min-w-touch min-h-touch" data-event="click:selectRecipient">
+                            <div class="w-12 h-12 bg-gradient-to-br from-success to-green-400 rounded-full flex items-center justify-center mb-2">
+                                <span class="text-white font-semibold text-sm" data-mock="true">MA</span>
+                            </div>
+                            <p class="text-xs font-medium truncate w-16 text-center" data-mock="true">Mike A.</p>
+                        </button>
+
+                        <button class="flex-shrink-0 flex flex-col items-center p-3 bg-white border rounded-xl min-w-touch min-h-touch" data-event="click:selectRecipient">
+                            <div class="w-12 h-12 bg-gradient-to-br from-warning to-yellow-400 rounded-full flex items-center justify-center mb-2">
+                                <span class="text-white font-semibold text-sm" data-mock="true">LS</span>
+                            </div>
+                            <p class="text-xs font-medium truncate w-16 text-center" data-mock="true">Lisa S.</p>
+                        </button>
+
+                        <button class="flex-shrink-0 flex flex-col items-center p-3 border-2 border-dashed border-gray-300 rounded-xl min-w-touch min-h-touch" data-event="click:addNewRecipient">
+                            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-2">
+                                <i class="fas fa-plus text-gray-400"></i>
+                            </div>
+                            <p class="text-xs font-medium text-text-gray">Add New</p>
+                        </button>
+                        <!-- @END_MAP )) -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom CTA -->
+            <div class="fixed bottom-0 left-0 right-0 max-w-sm mx-auto p-4 bg-white border-t">
+                <button class="w-full bg-primary text-white py-4 rounded-xl font-semibold min-h-touch transition-colors hover:bg-primary/90"
+                        data-event="click:continueToAmount" data-implementation="Should validate recipient selection">
+                    Continue
+                </button>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: SendMoney -->
+
+        <!-- @COMPONENT: SendAmount -->
+        <div id="send-amount-screen" class="onboarding-step">
+            <!-- Status Bar -->
+            <div class="flex justify-between items-center p-4 pt-12 bg-white border-b">
+                <div class="flex items-center space-x-1">
+                    <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                </div>
+                <span class="text-sm font-medium text-gray-900">9:41 AM</span>
+                <div class="flex items-center space-x-1">
+                    <i class="fas fa-signal text-xs text-gray-400"></i>
+                    <i class="fas fa-wifi text-xs text-gray-400"></i>
+                    <i class="fas fa-battery-three-quarters text-xs text-gray-400"></i>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 bg-white border-b">
+                <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 min-h-touch min-w-touch" data-event="click:goBack">
+                    <i class="fas fa-arrow-left text-gray-600"></i>
+                </button>
+                <h1 class="text-lg font-semibold">Send to Sarah Khan</h1>
+                <div class="w-10 h-10"></div>
+            </div>
+
+            <div class="p-4 space-y-6">
+                <!-- Recipient Info -->
+                <div class="flex items-center space-x-3 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold" data-mock="true">SK</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold" data-mock="true">Sarah Khan</p>
+                        <p class="text-sm text-text-gray">🇺🇸 United States • Bank Account</p>
+                    </div>
+                    <button class="text-primary" data-event="click:changeRecipient">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+
+                <!-- Amount Input -->
+                <div class="space-y-4">
+                    <div class="text-center">
+                        <p class="text-sm text-text-gray mb-2">You send</p>
+                        <div class="relative">
+                            <input type="number" 
+                                   class="w-full text-center text-4xl font-bold bg-transparent border-none outline-none" 
+                                   placeholder="0" 
+                                   data-bind="sendAmount" data-mock="true" value="5000">
+                            <div class="absolute right-0 top-1/2 transform -translate-y-1/2">
+                                <button class="flex items-center space-x-1 px-3 py-2 bg-gray-100 rounded-lg min-h-touch" data-event="click:changeCurrency">
+                                    <span class="font-semibold">PKR</span>
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exchange Rate Card -->
+                    <div class="bg-gradient-to-r from-primary/5 to-primary-light/5 border border-primary/20 rounded-xl p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-exchange-alt text-primary"></i>
+                                <span class="font-medium text-sm">Live Exchange Rate</span>
+                            </div>
+                            <span class="text-xs text-success bg-success/10 px-2 py-1 rounded-full">
+                                <i class="fas fa-arrow-up text-xs mr-1"></i>+0.5%
+                            </span>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-text-gray">1 USD =</span>
+                                <span class="font-semibold" data-mock="true">₨ 284.50</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-text-gray">Rate expires in:</span>
+                                <span class="font-semibold text-warning" data-mock="true">4:32</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transaction Summary -->
+                    <div class="bg-white border rounded-xl p-4 space-y-3">
+                        <h3 class="font-semibold text-sm">Transaction Summary</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-text-gray">Amount you send</span>
+                                <span class="font-medium" data-mock="true">₨ 5,000.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-text-gray">Transfer fee</span>
+                                <span class="font-medium" data-mock="true">₨ 125.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-text-gray">Exchange fee</span>
+                                <span class="font-medium" data-mock="true">₨ 50.00</span>
+                            </div>
+                            <hr>
+                            <div class="flex justify-between font-semibold">
+                                <span>Total you pay</span>
+                                <span data-mock="true">₨ 5,175.00</span>
+                            </div>
+                            <div class="flex justify-between text-success font-semibold">
+                                <span>Recipient receives</span>
+                                <span data-mock="true">$17.57</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                            <i class="fas fa-clock text-success text-sm"></i>
+                            <span class="text-sm font-medium text-success">Estimated delivery: 1-2 hours</span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Amounts -->
+                    <div class="grid grid-cols-4 gap-2">
+                        <button class="py-3 px-2 border rounded-lg text-sm font-medium hover:border-primary hover:text-primary transition-colors min-h-touch" data-event="click:setQuickAmount">
+                            ₨ 1,000
+                        </button>
+                        <button class="py-3 px-2 border rounded-lg text-sm font-medium hover:border-primary hover:text-primary transition-colors min-h-touch" data-event="click:setQuickAmount">
+                            ₨ 2,500
+                        </button>
+                        <button class="py-3 px-2 border rounded-lg text-sm font-medium hover:border-primary hover:text-primary transition-colors min-h-touch" data-event="click:setQuickAmount">
+                            ₨ 5,000
+                        </button>
+                        <button class="py-3 px-2 border rounded-lg text-sm font-medium hover:border-primary hover:text-primary transition-colors min-h-touch" data-event="click:setQuickAmount">
+                            ₨ 10,000
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom CTA -->
+            <div class="fixed bottom-0 left-0 right-0 max-w-sm mx-auto p-4 bg-white border-t">
+                <button class="w-full bg-primary text-white py-4 rounded-xl font-semibold min-h-touch transition-colors hover:bg-primary/90"
+                        data-event="click:reviewTransaction" data-implementation="Should validate amount and recipient">
+                    Review & Send
+                </button>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: SendAmount -->
+
+        <!-- @COMPONENT: Exchange -->
+        <div id="exchange-screen" class="onboarding-step">
+            <!-- Status Bar -->
+            <div class="flex justify-between items-center p-4 pt-12 bg-white border-b">
+                <div class="flex items-center space-x-1">
+                    <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                </div>
+                <span class="text-sm font-medium text-gray-900">9:41 AM</span>
+                <div class="flex items-center space-x-1">
+                    <i class="fas fa-signal text-xs text-gray-400"></i>
+                    <i class="fas fa-wifi text-xs text-gray-400"></i>
+                    <i class="fas fa-battery-three-quarters text-xs text-gray-400"></i>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 bg-white border-b">
+                <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 min-h-touch min-w-touch" data-event="click:goBack">
+                    <i class="fas fa-arrow-left text-gray-600"></i>
+                </button>
+                <h1 class="text-lg font-semibold">Exchange</h1>
+                <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 min-h-touch min-w-touch" data-event="click:viewExchangeHistory">
+                    <i class="fas fa-history text-gray-600"></i>
+                </button>
+            </div>
+
+            <div class="p-4 space-y-6">
+                <!-- Exchange Widget -->
+                <div class="bg-white border rounded-2xl p-6 space-y-4">
+                    <!-- From -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-text-gray">From</label>
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-success/20 rounded-full flex items-center justify-center">
+                                    <span class="font-bold text-success">₨</span>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">PKR</p>
+                                    <p class="text-xs text-text-gray">Pakistani Rupee</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <input type="number" 
+                                       class="text-right text-xl font-bold bg-transparent border-none outline-none w-24" 
+                                       placeholder="0" 
+                                       data-bind="fromAmount" data-mock="true" value="10000">
+                                <p class="text-xs text-text-gray">Balance: ₨ 25,000</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Swap Button -->
+                    <div class="flex justify-center">
+                        <button class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center hover:bg-primary/20 transition-colors min-h-touch min-w-touch" data-event="click:swapCurrencies">
+                            <i class="fas fa-exchange-alt text-primary text-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- To -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-text-gray">To</label>
+                        <div class="relative">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                <button class="flex items-center space-x-3 min-h-touch" data-event="click:selectToCurrency">
+                                    <div class="w-10 h-10 bg-warning/20 rounded-full flex items-center justify-center">
+                                        <span class="font-bold text-warning text-xs">USDT</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold">USDT</p>
+                                        <p class="text-xs text-text-gray">Tether USD</p>
+                                    </div>
+                                    <i class="fas fa-chevron-down text-xs text-text-gray"></i>
+                                </button>
+                                <div class="text-right">
+                                    <p class="text-xl font-bold" data-bind="toAmount" data-mock="true">35.20</p>
+                                    <p class="text-xs text-text-gray">Balance: $150.50</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Market Info -->
+                <div class="bg-gradient-to-r from-primary/5 to-warning/5 border border-primary/20 rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-semibold text-sm">Market Information</h3>
+                        <span class="text-xs text-success bg-success/10 px-2 py-1 rounded-full">
+                            <div class="w-1.5 h-1.5 bg-success rounded-full inline-block mr-1"></div>
+                            Live
+                        </span>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-text-gray">Exchange Rate</span>
+                            <span class="font-semibold" data-mock="true">1 USDT = ₨ 284.10</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-text-gray">Network Fee</span>
+                            <span class="font-semibold" data-mock="true">₨ 85.00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-text-gray">Platform Fee (0.5%)</span>
+                            <span class="font-semibold" data-mock="true">₨ 50.00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-text-gray">Slippage</span>
+                            <span class="font-semibold text-warning" data-mock="true">~0.1%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Exchange Amounts -->
+                <div class="space-y-3">
+                    <h3 class="font-semibold text-sm">Quick Amounts</h3>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button class="py-3 px-2 border rounded-lg text-sm font-medium hover:border-primary hover:text-primary transition-colors min-h-touch" data-event="click:setQuickExchangeAmount">
+                            ₨ 2.5K
+                        </button>
+                        <button class="py-3 px-2 border rounded-lg text-sm font-medium hover:border-primary hover:text-primary transition-colors min-h-touch" data-event="click:setQuickExchangeAmount">
+                            ₨ 5K
+                        </button>
+                        <button class="py-3 px-2 border-2 border-primary bg-primary/5 rounded-lg text-sm font-medium text-primary min-h-touch" data-event="click:setQuickExchangeAmount">
+                            ₨ 10K
+                        </button>
+                        <button class="py-3 px-2 border rounded-lg text-sm font-medium hover:border-primary hover:text-primary transition-colors min-h-touch" data-event="click:setQuickExchangeAmount">
+                            All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Educational Info -->
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-info-circle text-primary text-lg mt-0.5"></i>
+                        <div>
+                            <h3 class="font-semibold text-sm mb-1">Understanding USDT</h3>
+                            <p class="text-sm text-text-gray">USDT (Tether) is a stablecoin pegged to the US Dollar. It's widely accepted and maintains price stability, making it ideal for cross-border transactions.</p>
+                            <button class="text-xs text-primary font-medium mt-2" data-event="click:learnMoreUSDT">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portfolio After Trade -->
+                <div class="bg-white border rounded-xl p-4 space-y-3 mb-20">
+                    <h3 class="font-semibold text-sm">Portfolio After Exchange</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-6 h-6 bg-success/20 rounded-full flex items-center justify-center">
+                                    <span class="text-xs font-bold text-success">₨</span>
+                                </div>
+                                <span class="text-sm font-medium">PKR</span>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold text-sm">₨ 14,865</p>
+                                <p class="text-xs text-text-gray">-₨ 10,135</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-6 h-6 bg-warning/20 rounded-full flex items-center justify-center">
+                                    <span class="text-xs font-bold text-warning">U</span>
+                                </div>
+                                <span class="text-sm font-medium">USDT</span>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold text-sm">$185.70</p>
+                                <p class="text-xs text-success">+$35.20</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom CTA -->
+            <div class="fixed bottom-0 left-0 right-0 max-w-sm mx-auto p-4 bg-white border-t">
+                <button class="w-full bg-primary text-white py-4 rounded-xl font-semibold min-h-touch transition-colors hover:bg-primary/90"
+                        data-event="click:confirmExchange" data-implementation="Should validate exchange parameters">
+                    Exchange ₨ 10,000 → $35.20 USDT
+                </button>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: Exchange -->
+
+        <!-- @COMPONENT: Settings -->
+        <div id="settings-screen" class="onboarding-step">
+            <!-- Status Bar -->
+            <div class="flex justify-between items-center p-4 pt-12 bg-white border-b">
+                <div class="flex items-center space-x-1">
+                    <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div class="w-1 h-1 bg-gray-400 rounded-full"></div>
+                </div>
+                <span class="text-sm font-medium text-gray-900">9:41 AM</span>
+                <div class="flex items-center space-x-1">
+                    <i class="fas fa-signal text-xs text-gray-400"></i>
+                    <i class="fas fa-wifi text-xs text-gray-400"></i>
+                    <i class="fas fa-battery-three-quarters text-xs text-gray-400"></i>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 bg-white border-b">
+                <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 min-h-touch min-w-touch" data-event="click:goBack">
+                    <i class="fas fa-arrow-left text-gray-600"></i>
+                </button>
+                <h1 class="text-lg font-semibold">Settings</h1>
+                <div class="w-10 h-10"></div>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="p-4 bg-white border-b">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center">
+                        <span class="text-2xl font-bold text-white" data-bind="userInitials" data-mock="true">AH</span>
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-lg font-semibold" data-bind="userName" data-mock="true">Ahmed Hassan</h2>
+                        <p class="text-sm text-text-gray" data-bind="userPhone" data-mock="true">+92 301 2345678</p>
+                        <div class="flex items-center space-x-2 mt-1">
+                            <span class="inline-flex items-center text-xs text-success bg-success/10 px-2 py-1 rounded-full">
+                                <div class="w-1.5 h-1.5 bg-success rounded-full mr-1"></div>
+                                Verified
+                            </span>
+                            <span class="inline-flex items-center text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">
+                                Enhanced KYC
+                            </span>
+                        </div>
+                    </div>
+                    <button class="text-primary" data-event="click:editProfile">
+                        <i class="fas fa-edit text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 space-y-6">
+                <!-- Language & Region -->
+                <div class="space-y-3">
+                    <h3 class="text-base font-semibold">Language & Region</h3>
+                    <div class="space-y-2">
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:changeLanguage">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-language text-primary text-lg w-5"></i>
+                                <div class="text-left">
+                                    <p class="font-medium text-sm">Language</p>
+                                    <p class="text-xs text-text-gray">English</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-medium">English</span>
+                                <i class="fas fa-chevron-right text-text-gray text-xs"></i>
+                            </div>
+                        </button>
+
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:changeRegion">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-globe text-primary text-lg w-5"></i>
+                                <div class="text-left">
+                                    <p class="font-medium text-sm">Region</p>
+                                    <p class="text-xs text-text-gray">Pakistan</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-lg">🇵🇰</span>
+                                <i class="fas fa-chevron-right text-text-gray text-xs"></i>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Security -->
+                <div class="space-y-3">
+                    <h3 class="text-base font-semibold">Security</h3>
+                    <div class="space-y-2">
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:managePIN">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-lock text-primary text-lg w-5"></i>
+                                <div class="text-left">
+                                    <p class="font-medium text-sm">PIN & Password</p>
+                                    <p class="text-xs text-text-gray">Change your security PIN</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-text-gray text-xs"></i>
+                        </button>
+
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:manageTwoFA">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-shield-alt text-primary text-lg w-5"></i>
+                                <div class="text-left">
+                                    <p class="font-medium text-sm">Two-Factor Authentication</p>
+                                    <p class="text-xs text-success">Enabled via SMS</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-10 h-6 bg-success rounded-full relative">
+                                    <div class="w-4 h-4 bg-white rounded-full absolute right-1 top-1 transition-transform"></div>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:manageBiometrics">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-fingerprint text-primary text-lg w-5"></i>
+                                <div class="text-left">
+                                    <p class="font-medium text-sm">Biometric Login</p>
+                                    <p class="text-xs text-success">Fingerprint enabled</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-10 h-6 bg-success rounded-full relative">
+                                    <div class="w-4 h-4 bg-white rounded-full absolute right-1 top-1 transition-transform"></div>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:manageDevices">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-mobile-alt text-primary text-lg w-5"></i>
+                                <div class="text-left">
+                                    <p class="font-medium text-sm">Trusted Devices</p>
+                                    <p class="text-xs text-text-gray">Manage your devices</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-text-gray text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KYC Status -->
+                <div class="space-y-3">
+                    <h3 class="text-base font-semibold">Verification</h3>
+                    <div class="bg-white border rounded-xl p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-user-check text-success text-lg"></i>
+                                <div>
+                                    <p class="font-medium text-sm">KYC Status</p>
+                                    <p class="text-xs text-success">Enhanced Level</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-success bg-success/10 px-2 py-1 rounded-full">Level 2</span>
+                        </div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-text-gray">Phone Verification</span>
+                                <i class="fas fa-check text-success"></i>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-text-gray">CNIC Verification</span>
+                                <i class="fas fa-check text-success"></i>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-text-gray">Selfie Verification</span>
+                                <i class="fas fa-check text-success"></i>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-text-gray">Address Verification</span>
+                                <i class="fas fa-times text-error"></i>
+                            </div>
+                        </div>
+
+                        <button class="w-full py-3 bg-primary/10 text-primary rounded-lg font-medium text-sm min-h-touch" data-event="click:upgradeKYC">
+                            Upgrade to Premium (Level 3)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Support & Help -->
+                <div class="space-y-3">
+                    <h3 class="text-base font-semibold">Support</h3>
+                    <div class="space-y-2">
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:helpCenter">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-question-circle text-primary text-lg w-5"></i>
+                                <div class="text-left">
+                                    <p class="font-medium text-sm">Help Center</p>
+                                    <p class="text-xs text-text-gray">FAQs and guides</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-text-gray text-xs"></i>
+                        </button>
+
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:liveChat">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-comments text-primary text-lg w-5"></i>
+                                <div class="text-left">
+                                    <p class="font-medium text-sm">Live Chat</p>
+                                    <p class="text-xs text-success">Available 24/7</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-success rounded-full"></div>
+                                <i class="fas fa-chevron-right text-text-gray text-xs"></i>
+                            </div>
+                        </button>
+
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:whatsappSupport">
+                            <div class="flex items-center space-x-3">
+                                <i class="fab fa-whatsapp text-success text-lg w-5"></i>
+                                <div class="text-left">
+                                    <p class="font-medium text-sm">WhatsApp Support</p>
+                                    <p class="text-xs text-text-gray">+92 300 CRYPTOFI</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-external-link-alt text-text-gray text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Legal & Privacy -->
+                <div class="space-y-3 mb-20">
+                    <h3 class="text-base font-semibold">Legal & Privacy</h3>
+                    <div class="space-y-2">
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:termsOfService">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-file-contract text-primary text-lg w-5"></i>
+                                <p class="font-medium text-sm">Terms of Service</p>
+                            </div>
+                            <i class="fas fa-chevron-right text-text-gray text-xs"></i>
+                        </button>
+
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:privacyPolicy">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-shield-alt text-primary text-lg w-5"></i>
+                                <p class="font-medium text-sm">Privacy Policy</p>
+                            </div>
+                            <i class="fas fa-chevron-right text-text-gray text-xs"></i>
+                        </button>
+
+                        <button class="w-full flex items-center justify-between p-4 bg-white border rounded-xl hover:bg-gray-50 transition-colors min-h-touch" data-event="click:dataRequest">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-download text-primary text-lg w-5"></i>
+                                <p class="font-medium text-sm">Download My Data</p>
+                            </div>
+                            <i class="fas fa-chevron-right text-text-gray text-xs"></i>
+                        </button>
+
+                        <button class="w-full flex items-center justify-between p-4 bg-white border border-error/20 rounded-xl hover:bg-red-50 transition-colors min-h-touch" data-event="click:deleteAccount">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-trash text-error text-lg w-5"></i>
+                                <p class="font-medium text-sm text-error">Delete Account</p>
+                            </div>
+                            <i class="fas fa-chevron-right text-error text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: Settings -->
+
+        <!-- @COMPONENT: BottomNavigation -->
+        <nav class="fixed bottom-0 left-0 right-0 max-w-sm mx-auto bg-white border-t shadow-lg">
+            <div class="flex items-center justify-around py-2">
+                <button class="flex flex-col items-center p-2 text-primary min-h-touch min-w-touch" data-event="click:goHome">
+                    <i class="fas fa-home text-lg mb-1"></i>
+                    <span class="text-xs font-medium">Home</span>
+                </button>
+                <button class="flex flex-col items-center p-2 text-text-gray hover:text-primary transition-colors min-h-touch min-w-touch" data-event="click:goSend">
+                    <i class="fas fa-paper-plane text-lg mb-1"></i>
+                    <span class="text-xs">Send</span>
+                </button>
+                <button class="flex flex-col items-center p-2 text-text-gray hover:text-primary transition-colors min-h-touch min-w-touch" data-event="click:goExchange">
+                    <i class="fas fa-exchange-alt text-lg mb-1"></i>
+                    <span class="text-xs">Exchange</span>
+                </button>
+                <button class="flex flex-col items-center p-2 text-text-gray hover:text-primary transition-colors min-h-touch min-w-touch" data-event="click:goTransactions">
+                    <i class="fas fa-list text-lg mb-1"></i>
+                    <span class="text-xs">History</span>
+                </button>
+                <button class="flex flex-col items-center p-2 text-text-gray hover:text-primary transition-colors min-h-touch min-w-touch" data-event="click:goSettings">
+                    <i class="fas fa-cog text-lg mb-1"></i>
+                    <span class="text-xs">Settings</span>
+                </button>
+            </div>
+        </nav>
+        <!-- @END_COMPONENT: BottomNavigation -->
+    </div>
+
+    <!-- @STATE: currentScreen:string = "onboarding" -->
+    <!-- @STATE: isRTL:boolean = false -->
+    <!-- @STATE: currentLanguage:string = "en" -->
+
+    <script>
+    (function() {
+        // TODO: Implement business logic, API calls, and state management
+        // TODO: Add proper form validation and error handling
+        // TODO: Implement biometric authentication integration
+        // TODO: Add real-time exchange rate updates
+        // TODO: Implement proper routing and navigation
+        // TODO: Add RTL layout switching functionality
+        // TODO: Implement secure storage for sensitive data
+        // TODO: Add proper accessibility features
+        // TODO: Implement offline mode and sync
+        // TODO: Add push notification handling
+
+        // Basic screen navigation demo
+        let currentScreen = 'dashboard-screen';
+        
+        function showScreen(screenId) {
+            document.querySelectorAll('.onboarding-step').forEach(screen => {
+                screen.style.display = 'none';
+            });
+            const screen = document.getElementById(screenId);
+            if (screen) {
+                screen.style.display = 'block';
+                screen.classList.add('active');
+            }
+        }
+
+        // Initialize with dashboard
+        showScreen(currentScreen);
+        
+        // Demo navigation event listeners
+        document.addEventListener('click', function(e) {
+            const button = e.target.closest('button');
+            if (!button) return;
+            
+            const event = button.getAttribute('data-event');
+            if (!event) return;
+            
+            // Handle navigation events
+            switch(event) {
+                case 'click:sendOTP':
+                    showScreen('otp-screen');
+                    break;
+                case 'click:verifyOTP':
+                    showScreen('dashboard-screen');
+                    break;
+                case 'click:sendMoney':
+                case 'click:goSend':
+                    showScreen('send-money-screen');
+                    break;
+                case 'click:continueToAmount':
+                    showScreen('send-amount-screen');
+                    break;
+                case 'click:exchange':
+                case 'click:goExchange':
+                    showScreen('exchange-screen');
+                    break;
+                case 'click:goSettings':
+                    showScreen('settings-screen');
+                    break;
+                case 'click:goHome':
+                    showScreen('dashboard-screen');
+                    break;
+                case 'click:goBack':
+                    // Simple back navigation - in real app would use proper routing
+                    if (currentScreen === 'otp-screen') {
+                        showScreen('onboarding-screen');
+                    } else {
+                        showScreen('dashboard-screen');
+                    }
+                    break;
+                default:
+                    console.log('Event:', event);
+            }
+        });
+
+        // Demo OTP input handling
+        document.querySelectorAll('input[type="tel"][maxlength="1"]').forEach((input, index, inputs) => {
+            input.addEventListener('keyup', function(e) {
+                if (this.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+                if (e.key === 'Backspace' && index > 0 && this.value.length === 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Demo pull-to-refresh
+        let startY = 0;
+        let currentY = 0;
+        let pulling = false;
+
+        document.addEventListener('touchstart', function(e) {
+            startY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchmove', function(e) {
+            currentY = e.touches[0].clientY;
+            if (currentY > startY + 50 && window.scrollY === 0) {
+                pulling = true;
+                // Visual feedback could be added here
+            }
+        });
+
+        document.addEventListener('touchend', function() {
+            if (pulling) {
+                // Simulate refresh
+                console.log('Pull to refresh triggered');
+                pulling = false;
+            }
+        });
+
+    })();
+    </script>
+
+    <style>
+    .onboarding-step {
+        display: none;
+    }
+    .onboarding-step.active {
+        display: block;
+    }
+    
+    /* Smooth transitions */
+    .transition-all {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    /* Loading skeleton animation */
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+    
+    .animate-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    /* Custom scrollbar for better UX */
+    .overflow-x-auto::-webkit-scrollbar {
+        display: none;
+    }
+    
+    /* Focus states for accessibility */
+    button:focus,
+    input:focus {
+        outline: 2px solid #2563EB;
+        outline-offset: 2px;
+    }
+    
+    /* RTL support preparation */
+    [dir="rtl"] .transform {
+        transform: scaleX(-1);
+    }
+    
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+        .border {
+            border-width: 2px;
+        }
+    }
+    
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+        .transition-all {
+            transition: none;
+        }
+    }
+    </style>
+</body>
+</html>
