@@ -1,10 +1,9 @@
 import type { Express } from "express";
-import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertUserSchema, insertTransactionSchema, insertRecipientSchema } from "@shared/schema";
 import { z } from "zod";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export async function registerRoutes(app: Express): Promise<void> {
   // Auth routes
   app.post("/api/auth/send-otp", async (req, res) => {
     try {
@@ -154,7 +153,4 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to get exchange rate" });
     }
   });
-
-  const httpServer = createServer(app);
-  return httpServer;
 }
